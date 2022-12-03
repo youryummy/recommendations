@@ -1,0 +1,18 @@
+apiVerion: v1
+kind: Service
+metadata:
+  name: recommendations
+  labels:
+    {{- include "recommendations.labels" . | nindent 4 }}
+  annotations:
+    dev.okteto.com/auto-ingress: "true"
+spec:
+  selector:
+    app.kubernetes.io/name: recommendations
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 5000
+      targetPort: 5000
+      protocol: TCP
