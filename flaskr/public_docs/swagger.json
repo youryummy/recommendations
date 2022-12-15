@@ -1,0 +1,68 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+      "version": "1.0.0",
+      "title": "Recommendation Service",
+      "description": "YourYummy recipes recommendation service"
+    },
+    "paths": {
+      "/api/v1/recommendation": {
+        "get": {
+          "description": "Returns recommended recipes per user",
+          "operationId": "getRecommendations",
+          "responses": {
+            "200": {
+              "description": "Recommendations per user",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/recipe"
+                    }
+                  }
+                }
+              }
+            },
+            "default": {
+              "description": "Unexpected error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "recipe": {
+          "type": "object",
+          "required": [
+            "id"
+          ],
+          "properties": {
+            "id": {
+              "type": "number"
+            }
+          }
+        },
+        "error": {
+          "type": "object",
+          "required": [
+            "message"
+          ],
+          "properties": {
+            "message": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        }
+      }
+    }
+  }
