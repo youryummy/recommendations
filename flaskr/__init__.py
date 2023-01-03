@@ -1,5 +1,8 @@
 from flask import Flask, send_from_directory
 from . import controller
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
@@ -14,6 +17,6 @@ def create_app():
 
     @app.route('/docs/<path:path>')
     def swagger_schema(path):
-        return send_from_directory('public_docs', path)
+        return send_from_directory('api', path)
 
     return app
