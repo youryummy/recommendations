@@ -1,4 +1,4 @@
-name: Flask CI
+name: CI
 
 on: [push]
 
@@ -7,16 +7,29 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python 3.8
+      - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: 3.8
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          python -m pip install -r requirements.txt
       - name: Run tests
         env:
-          JWT_SECRET: ${{ secrets.JWT_SECRET }
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
         run: |
           python -m pytest -v test/test.py -s
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Okteto CLI
+        run: |
+          curl https://get.okteto.com -sSfL | sh
+      - name: Deploy to Okteto
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          OKTETO_TOKEN: ${{ secrets.OKTETO_TOKEN }}
+        run: |
+          okteto login --token $OKTETO_TOKEN
+          okteto up --namespace youryummy-maribelrb22
