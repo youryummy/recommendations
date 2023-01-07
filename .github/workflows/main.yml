@@ -36,3 +36,4 @@ jobs:
           namespace: youryummy-maribelrb22
           variables: >-
             JWT_SECRET=${{ secrets.JWT_SECRET }}
+          liveness: "http://localhost/"
