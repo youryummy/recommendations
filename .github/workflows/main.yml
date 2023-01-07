@@ -16,5 +16,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       - name: Run tests
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET }
         run: |
           python -m pytest -v test/test.py -s
