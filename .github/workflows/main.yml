@@ -32,7 +32,7 @@ jobs:
       - name: Okteto Deploy
         uses: okteto/pipeline@latest
         with:
-          name: recommendations-service
+          name: recommendations
           namespace: youryummy-maribelrb22
           variables: >-
             JWT_SECRET=${{ secrets.JWT_SECRET }}
