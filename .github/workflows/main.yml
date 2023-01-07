@@ -20,16 +20,19 @@ jobs:
         run: |
           python -m pytest -v test/test.py -s
   deploy:
+    name: Deploy to Okteto
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Okteto CLI
-        run: |
-          curl https://get.okteto.com -sSfL | sh
-      - name: Deploy to Okteto
-        env:
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          OKTETO_TOKEN: ${{ secrets.OKTETO_TOKEN }}
-        run: |
-          okteto login --token $OKTETO_TOKEN
-          okteto up --namespace youryummy-maribelrb22
+      - name: Okteto Login
+        uses: okteto/login@latest
+        with:
+          token: ${{ secrets.OKTETO_TOKEN }}
+      - name: Okteto Deploy
+        uses: okteto/pipeline@latest
+        with:
+          name: recommendations-service
+          namespace: youryummy-maribelrb22
+          variables: >-
+            JWT_SECRET=${{ secrets.JWT_SECRET }}
