@@ -30,7 +30,7 @@ jobs:
         with:
           token: ${{ secrets.OKTETO_TOKEN }}
       - name: Okteto Deploy
-        uses: resinas/okteto-push@v1.0.2
+        uses: okteto/pipeline@latest
         with:
           name: recommendations
           namespace: youryummy-maribelrb22
