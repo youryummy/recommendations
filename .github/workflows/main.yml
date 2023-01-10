@@ -16,7 +16,7 @@ jobs:
           python -m pip install -r requirements.txt
       - name: Run tests
         env:
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}      
         run: |
           python -m pytest -v test/test.py -s
   deploy:
@@ -34,6 +34,5 @@ jobs:
         with:
           name: recommendations
           namespace: youryummy-maribelrb22
-          probe: http://localhost/
           variables: >-
             JWT_SECRET=${{ secrets.JWT_SECRET }}

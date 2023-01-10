@@ -2,6 +2,11 @@ import pytest
 from flaskr import create_app
 from unittest.mock import Mock
 import jwt
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+JWT_SECRET = os.getenv('JWT_SECRET')
 
 @pytest.fixture
 def app():
@@ -33,7 +38,7 @@ def test_recommendations(client, monkeypatch):
     stub.return_value = ["6", "7", "8"]
     monkeypatch.setattr('flaskr.controller.service.utils.communicate' , stub)
 
-    token = jwt.encode({'username': 'javivm17', 'plan': 'base'}, 'youryummysecret', algorithm='HS256')
+    token = jwt.encode({'username': 'javivm17', 'plan': 'base'}, JWT_SECRET, algorithm='HS256')
     client.set_cookie('localhost', 'authToken', token)
     response = client.get('/api/v1/recommendation')
     assert response.status_code == 200
@@ -43,7 +48,7 @@ def test_recommendations_without_ratings(client, monkeypatch):
     stub.return_value = []
     monkeypatch.setattr('flaskr.controller.service.utils.communicate' , stub)
 
-    token = jwt.encode({'username': 'javivm17', 'plan': 'base'}, 'youryummysecret', algorithm='HS256')
+    token = jwt.encode({'username': 'javivm17', 'plan': 'base'}, JWT_SECRET, algorithm='HS256')
     client.set_cookie('localhost', 'authToken', token)
     response = client.get('/api/v1/recommendation')
     assert response.status_code == 200
@@ -53,7 +58,7 @@ def test_recommendations_plan_premium(client, monkeypatch):
     stub.return_value = []
     monkeypatch.setattr('flaskr.controller.service.utils.communicate' , stub)
 
-    token = jwt.encode({'username': 'javivm17', 'plan': 'premium'}, 'youryummysecret', algorithm='HS256')
+    token = jwt.encode({'username': 'javivm17', 'plan': 'premium'}, JWT_SECRET, algorithm='HS256')
     client.set_cookie('localhost', 'authToken', token)
     response = client.get('/api/v1/recommendation')
     assert response.status_code == 200
