@@ -6,10 +6,30 @@
       "description": "YourYummy recipes recommendation service"
     },
     "paths": {
-      "/api/v1/recommendation": {
+      "/api/v1/recommendation/{username}/{plan}": {
         "get": {
           "description": "Returns recommended recipes per user",
           "operationId": "getRecommendations",
+          "parameters": [
+            {
+              "required": true,
+              "name": "username",
+              "description": "username to calculate recommendations",
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "required": true,
+              "name": "plan",
+              "description": "plan of the user",
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
           "responses": {
             "200": {
               "description": "Recommendations per user",

@@ -1,12 +1,9 @@
 from . import utils
 from collections import Counter
 from functools import lru_cache
-from dotenv import load_dotenv
 import logging
-import os
 
 logger = logging.getLogger(__name__)
-load_dotenv()
 
 def get_usual_tags(rated_recipes):
     tags_frequency = {}
@@ -38,22 +35,24 @@ def compute_similarity_without_cache(usual_tags, recipes_tags):
 def dice_coefficient(usual_tags, tags):
     return 2 * len(set(usual_tags).intersection(set(tags))) / (len(usual_tags) + len(tags))
 
-def get_recommendations(username, recipes, plan):
-    if os.getenv('PYTHON_ENV') == 'development':
-        ratings_uri = f'http://rating-service/api/v1/ratings/findByUserId/{username}' 
-    else:
-        ratings_uri = f'http://youryummy-ratings-service/api/v1/ratings/findByUserId/{username}' 
+def get_recommendations(username, plan):
+    ratings_uri = f'http://youryummy-ratings-service/api/v1/ratings/findByUserId/{username}' 
+
+    logger.info(f'Obtaining the recipes')
+    recipes = utils.communicate('GET', 'http://recipes/api/v1/recipes', None)
+    logger.info(f'The recipes has been obtained successfully')
+    
 
     logger.info(f'Obtaining the rated recipes for user {username}')
     my_rated_recipes = utils.communicate("GET", ratings_uri)
     logger.info(f'The rated recipes for user {username} has been obtained successfully')
     my_rated_recipes = set(my_rated_recipes)
 
-    rated_recipes = [{r["id"]: r["tags"]} for r in recipes if r["id"] in my_rated_recipes]
-    non_rated_recipes = [r for r in recipes if r["id"] not in my_rated_recipes]
+    rated_recipes = [{r["_id"]: r["tags"]} for r in recipes if r["_id"] in my_rated_recipes]
+    non_rated_recipes = [r for r in recipes if r["_id"] not in my_rated_recipes]
 
     usual_tags = tuple(get_usual_tags(rated_recipes))
-    recipes_tags = tuple((r["id"], tuple(r["tags"])) for r in non_rated_recipes)
+    recipes_tags = tuple((r["_id"], tuple(r["tags"])) for r in non_rated_recipes)
 
     if plan == 'base':
         similarity = compute_similarity_without_cache(usual_tags, recipes_tags)
@@ -61,6 +60,6 @@ def get_recommendations(username, recipes, plan):
         similarity = compute_similarity(usual_tags, recipes_tags)
 
     sorted_similarity = sorted(similarity.items(), key=lambda x: x[1], reverse=True)
-    recommended_recipes = [r[0] for r in sorted_similarity[:10]]
+    recommended_recipes = [r[0] for r in sorted_similarity]
 
     return recommended_recipes
