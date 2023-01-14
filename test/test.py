@@ -34,37 +34,106 @@ def test_swagger_schema(client):
     assert response.json['info']['title'] == 'Recommendation Service'
 
 def test_recommendations(client, monkeypatch):
-    stub = Mock()
-    stub.return_value = ["6", "7", "8"]
-    monkeypatch.setattr('flaskr.controller.service.utils.communicate' , stub)
+    recipes_stub = Mock()
+    recipes_stub.return_value = [
+        {
+            "_id": "1",
+            "tags": ["tag1", "tag2"]
+        },
+        {
+            "_id": "2",
+            "tags": ["tag3", "tag4"]
+        },
+        {
+            "_id": "3",
+            "tags": ["tag5", "tag6"]
+        }
+    ]
+    monkeypatch.setattr('flaskr.controller.service.get_recipes' , recipes_stub)
 
-    token = jwt.encode({'username': 'javivm17', 'plan': 'base'}, JWT_SECRET, algorithm='HS256')
-    client.set_cookie('localhost', 'authToken', token)
-    response = client.get('/api/v1/recommendation')
+    ratings_stub = Mock()
+    ratings_stub.return_value = ["1",]
+    monkeypatch.setattr('flaskr.controller.service.get_rated_recipes' , ratings_stub)
+
+    response = client.get('/api/v1/recommendation/javivm/base')
     assert response.status_code == 200
 
 def test_recommendations_without_ratings(client, monkeypatch):
-    stub = Mock()
-    stub.return_value = []
-    monkeypatch.setattr('flaskr.controller.service.utils.communicate' , stub)
+    recipes_stub = Mock()
+    recipes_stub.return_value = [
+        {
+            "_id": "1",
+            "tags": ["tag1", "tag2"]
+        },
+        {
+            "_id": "2",
+            "tags": ["tag3", "tag4"]
+        },
+        {
+            "_id": "3",
+            "tags": ["tag5", "tag6"]
+        }
+    ]
+    monkeypatch.setattr('flaskr.controller.service.get_recipes' , recipes_stub)
 
-    token = jwt.encode({'username': 'javivm17', 'plan': 'base'}, JWT_SECRET, algorithm='HS256')
-    client.set_cookie('localhost', 'authToken', token)
-    response = client.get('/api/v1/recommendation')
+    ratings_stub = Mock()
+    ratings_stub.return_value = []
+    monkeypatch.setattr('flaskr.controller.service.get_rated_recipes' , ratings_stub)
+
+    response = client.get('/api/v1/recommendation/javivm/base')
     assert response.status_code == 200
 
 def test_recommendations_plan_premium(client, monkeypatch):
-    stub = Mock()
-    stub.return_value = []
-    monkeypatch.setattr('flaskr.controller.service.utils.communicate' , stub)
+    recipes_stub = Mock()
+    recipes_stub.return_value = [
+        {
+            "_id": "1",
+            "tags": ["tag1", "tag2"]
+        },
+        {
+            "_id": "2",
+            "tags": ["tag3", "tag4"]
+        },
+        {
+            "_id": "3",
+            "tags": ["tag5", "tag6"]
+        }
+    ]
+    monkeypatch.setattr('flaskr.controller.service.get_recipes' , recipes_stub)
 
-    token = jwt.encode({'username': 'javivm17', 'plan': 'premium'}, JWT_SECRET, algorithm='HS256')
-    client.set_cookie('localhost', 'authToken', token)
-    response = client.get('/api/v1/recommendation')
+    ratings_stub = Mock()
+    ratings_stub.return_value = []
+    monkeypatch.setattr('flaskr.controller.service.get_rated_recipes' , ratings_stub)
+
+    response = client.get('/api/v1/recommendation/javivm/premium')
     assert response.status_code == 200
 
-def test_recommendations_without_auth(client):
-    response = client.get('/api/v1/recommendation')
-    assert response.status_code == 401
+def test_recommendations_and_fail_communication_with_recipes(client, monkeypatch):
+    ratings_stub = Mock()
+    ratings_stub.return_value = ["1",]
+    monkeypatch.setattr('flaskr.controller.service.get_rated_recipes' , ratings_stub)
 
+    response = client.get('/api/v1/recommendation/javivm/base')
+    assert response.status_code == 500
+
+def test_recommendations_and_fail_communication_with_ratings(client, monkeypatch):
+    recipes_stub = Mock()
+    recipes_stub.return_value = [
+        {
+            "_id": "1",
+            "tags": ["tag1", "tag2"]
+        },
+        {
+            "_id": "2",
+            "tags": ["tag3", "tag4"]
+        },
+        {
+            "_id": "3",
+            "tags": ["tag5", "tag6"]
+        }
+    ]
+    monkeypatch.setattr('flaskr.controller.service.get_recipes' , recipes_stub)
+
+    response = client.get('/api/v1/recommendation/javivm/base')
+    assert response.status_code == 500
 

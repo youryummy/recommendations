@@ -1,4 +1,5 @@
-from flask import Blueprint
+from flask import Blueprint, Response
+import json
 from . import service
 import logging
 
@@ -10,5 +11,8 @@ def obtain_recommendations(username, plan):
     logger.info(f'Processing request for user {username} and plan {plan}')
     
     recommendations = service.get_recommendations(username, plan)
+    if type(recommendations) is str:
+        resp = json.dumps({'message': recommendations})
+        return Response(resp, status=500, mimetype='application/json')
     return recommendations
     
