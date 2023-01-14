@@ -44,6 +44,9 @@ def get_recommendations(username, plan):
     if type(my_rated_recipes) is str:
         return my_rated_recipes
 
+    if my_rated_recipes is None:
+        my_rated_recipes = []
+
     rated_recipes = [{r["_id"]: r["tags"]} for r in recipes if r["_id"] in my_rated_recipes]
     non_rated_recipes = [r for r in recipes if r["_id"] not in my_rated_recipes]
 
