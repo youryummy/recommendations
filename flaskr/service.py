@@ -50,6 +50,9 @@ def get_recommendations(username, plan):
     usual_tags = tuple(get_usual_tags(rated_recipes))
     recipes_tags = tuple((r["_id"], tuple(r["tags"])) for r in non_rated_recipes)
 
+    usual_tags = tuple(filter(lambda x: x != "", usual_tags))
+    recipes_tags = tuple((r[0], tuple(filter(lambda x: x != "", r[1]))) for r in recipes_tags)
+
     if plan == 'base':
         similarity = compute_similarity_without_cache(usual_tags, recipes_tags)
     else:
