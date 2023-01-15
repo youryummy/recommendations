@@ -71,7 +71,7 @@ def test_recommendations_without_ratings(client, monkeypatch):
         },
         {
             "_id": "3",
-            "tags": ["tag5", "tag6"]
+            "tags": [""]
         }
     ]
     monkeypatch.setattr('flaskr.controller.service.get_recipes' , recipes_stub)
@@ -96,7 +96,7 @@ def test_recommendations_plan_premium(client, monkeypatch):
         },
         {
             "_id": "3",
-            "tags": ["tag5", "tag6"]
+            "tags": [""]
         }
     ]
     monkeypatch.setattr('flaskr.controller.service.get_recipes' , recipes_stub)

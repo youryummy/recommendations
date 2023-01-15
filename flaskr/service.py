@@ -21,15 +21,21 @@ def get_usual_tags(rated_recipes):
 def compute_similarity(usual_tags, recipes_tags):
     similarity = {}
     for recipe in recipes_tags:
-        tags = set(recipe[1])
-        similarity[recipe[0]] = dice_coefficient(usual_tags, tags)
+        if len(recipe[1]) == 0:
+            similarity[recipe[0]] = 0.
+        else:
+            tags = set(recipe[1])
+            similarity[recipe[0]] = dice_coefficient(usual_tags, tags)
     return similarity
 
 def compute_similarity_without_cache(usual_tags, recipes_tags):
     similarity = {}
     for recipe in recipes_tags:
-        tags = set(recipe[1])
-        similarity[recipe[0]] = dice_coefficient(usual_tags, tags)
+        if len(recipe[1]) == 0:
+            similarity[recipe[0]] = 0.
+        else:
+            tags = set(recipe[1])
+            similarity[recipe[0]] = dice_coefficient(usual_tags, tags)
     return similarity
 
 def dice_coefficient(usual_tags, tags):
