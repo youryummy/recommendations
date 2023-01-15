@@ -43,10 +43,7 @@ def get_recommendations(username, plan):
     my_rated_recipes = get_rated_recipes(username)
     if type(my_rated_recipes) is str:
         return my_rated_recipes
-
-    if my_rated_recipes is None:
-        my_rated_recipes = []
-
+    
     rated_recipes = [{r["_id"]: r["tags"]} for r in recipes if r["_id"] in my_rated_recipes]
     non_rated_recipes = [r for r in recipes if r["_id"] not in my_rated_recipes]
 
@@ -84,3 +81,4 @@ def get_rated_recipes(username):
         return "Failed to communicate with ratings service"
     logger.info(f'The rated recipes for user {username} has been obtained successfully')
     my_rated_recipes = set(my_rated_recipes)
+    return my_rated_recipes
