@@ -22,7 +22,7 @@ def compute_similarity(usual_tags, recipes_tags):
     similarity = {}
     for recipe in recipes_tags:
         if len(recipe[1]) == 0:
-            similarity[recipe[0]] = 0.
+            similarity[recipe[0]] = -1.
         else:
             tags = set(recipe[1])
             similarity[recipe[0]] = dice_coefficient(usual_tags, tags)
@@ -32,7 +32,7 @@ def compute_similarity_without_cache(usual_tags, recipes_tags):
     similarity = {}
     for recipe in recipes_tags:
         if len(recipe[1]) == 0:
-            similarity[recipe[0]] = 0.
+            similarity[recipe[0]] = -1.
         else:
             tags = set(recipe[1])
             similarity[recipe[0]] = dice_coefficient(usual_tags, tags)
