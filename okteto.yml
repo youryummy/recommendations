@@ -1,0 +1,13 @@
+build:
+  recommendations:
+    context: .
+
+deploy:
+  - helm upgrade --install recommendations chart 
+    --set recommendations.image=${OKTETO_BUILD_RECOMMENDATIONS_IMAGE}
+
+dev:
+  recommendations:
+    command: ["flask", "--app", "flaskr", "run"]
+    sync:
+      - .:/app

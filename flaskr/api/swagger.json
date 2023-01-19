@@ -1,0 +1,77 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+      "version": "1.0.0",
+      "title": "Recommendation Service",
+      "description": "YourYummy recipes recommendation service"
+    },
+    "paths": {
+      "/api/v1/recommendation/{username}/{plan}": {
+        "get": {
+          "description": "Returns recommended recipes per user",
+          "operationId": "getRecommendations",
+          "parameters": [
+            {
+              "required": true,
+              "name": "username",
+              "description": "username to calculate recommendations",
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "required": true,
+              "name": "plan",
+              "description": "plan of the user",
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Recommendations per user",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "default": {
+              "description": "Unexpected error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/error"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "error": {
+          "type": "object",
+          "required": [
+            "message"
+          ],
+          "properties": {
+            "message": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        }
+      }
+    }
+  }
